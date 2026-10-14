@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build and coverage outputs
+dist/
+build/
+coverage/
+.next/
+.turbo/
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Logs and temporary files
+*.log
+.tmp/
+tmp/
+.cache/
+
+# Editor and OS
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Local databases and generated artifacts
+*.sqlite
+*.sqlite3
+*.db
+.artifacts/
