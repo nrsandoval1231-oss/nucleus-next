@@ -90,7 +90,8 @@ async function page() {
   w.HTMLDialogElement.prototype.close = function () {
     this.open = false;
   };
-  let fail = false;
+  let fail = false,
+    currentDetail = structuredClone(detail);
   const calls = [];
   w.fetch = async (url) => {
     calls.push(url);
@@ -99,13 +100,55 @@ async function page() {
     return {
       ok: true,
       json: async () =>
-        structuredClone(url.startsWith("/api/repository") ? detail : inventory),
+        structuredClone(
+          url.startsWith("/api/repository") ? currentDetail : inventory,
+        ),
     };
   };
   w.eval(script);
   await new Promise((r) => setTimeout(r, 20));
-  return { w, dom, calls, fail: () => (fail = true) };
+  return {
+    w,
+    dom,
+    calls,
+    fail: () => (fail = true),
+    setDetail: (value) => (currentDetail = value),
+  };
 }
+test("attention headline clears after checks recover", async () => {
+  const { w, dom, setDetail } = await page();
+  setDetail({ ...detail, state: { ...detail.state, observed: "failure" } });
+  w.document.querySelector('[data-inspect="1"]').click();
+  await new Promise((r) => setTimeout(r, 20));
+  assert.match(
+    w.document.querySelector("#attention-strip strong").textContent,
+    /failing checks/,
+  );
+  w.document.querySelector("#details [data-close]").click();
+  setDetail(detail);
+  w.document.querySelector('[data-inspect="1"]').click();
+  await new Promise((r) => setTimeout(r, 20));
+  assert.doesNotMatch(
+    w.document.querySelector("#attention-strip strong").textContent,
+    /failing checks/,
+  );
+  dom.window.close();
+});
+test("external HTTPS status evidence opens the actual CI provider", async () => {
+  const { w, dom, setDetail } = await page();
+  setDetail({
+    ...detail,
+    checks: [
+      { ...detail.checks[0], url: "https://app.circleci.com/pipelines/1" },
+    ],
+  });
+  w.document.querySelector('[data-inspect="1"]').click();
+  await new Promise((r) => setTimeout(r, 20));
+  assert.ok(
+    w.document.querySelector('a[href="https://app.circleci.com/pipelines/1"]'),
+  );
+  dom.window.close();
+});
 test("portfolio loads live reads, filters and searches without running repository HTML", async () => {
   const { w, dom, calls } = await page();
   assert.equal(w.document.querySelectorAll(".project").length, 2);

@@ -26,11 +26,12 @@ export function projectState({ head, checks = [], deployments = [] }) {
     ...check,
     acceptance: "not_recorded",
     vision: "not_approved",
-    deployment: success.some((d) => d.sha === head)
-      ? "observed_at_head"
-      : success.length
-        ? "other_sha"
-        : "not_established",
+    deployment:
+      head && success.some((d) => d.sha === head)
+        ? "observed_at_head"
+        : success.length
+          ? "other_sha"
+          : "not_established",
   };
 }
 function canonical(value) {

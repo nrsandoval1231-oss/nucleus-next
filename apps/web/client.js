@@ -10,18 +10,19 @@ const escape = (s) =>
 const safeUrl = (value) => {
   try {
     const u = new URL(value);
-    return u.protocol === "https:" &&
-      ["github.com", "api.github.com"].includes(u.hostname) &&
-      !u.username &&
-      !u.password
+    return u.protocol === "https:" && u.hostname && !u.username && !u.password
       ? u.href
-      : "#";
+      : null;
   } catch {
-    return "#";
+    return null;
   }
 };
-const link = (url, text) =>
-  `<a href="${escape(safeUrl(url))}" target="_blank" rel="noopener noreferrer">${escape(text)} ↗</a>`;
+const link = (url, text) => {
+  const href = safeUrl(url);
+  return href
+    ? `<a href="${escape(href)}" target="_blank" rel="noopener noreferrer">${escape(text)} ↗</a>`
+    : `<span>${escape(text)} · link unavailable</span>`;
+};
 const time = (t) =>
   t
     ? new Date(t).toLocaleString(undefined, {
@@ -136,6 +137,11 @@ function render() {
       `${bad.length} project${bad.length === 1 ? " has" : "s have"} failing checks at the observed default head.`;
     $("#attention-strip p").textContent =
       "Inspect the exact run before treating it as a blocker or regression.";
+  } else {
+    $("#attention-strip strong").textContent =
+      "A useful view starts with honest coverage.";
+    $("#attention-strip p").textContent =
+      "Repository facts load first. Inspect a project for current commits, checks, merges, and deployments.";
   }
 }
 function card(r) {

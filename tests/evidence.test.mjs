@@ -5,6 +5,12 @@ import {
   projectState,
   evidenceId,
 } from "../packages/core/evidence.mjs";
+test("a deployment without a resolved SHA cannot match an unknown head", () => {
+  assert.notEqual(
+    projectState({ deployments: [{ state: "success" }] }).deployment,
+    "observed_at_head",
+  );
+});
 
 test("zero checks and successful checks without an approved profile never prove verification", () => {
   assert.equal(summarizeChecks([], "abc").verification, "unknown");
