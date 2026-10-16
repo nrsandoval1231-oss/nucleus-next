@@ -47,7 +47,7 @@ export async function installationToken(env, fetcher = fetch) {
     `https://api.github.com/app/installations/${env.GITHUB_INSTALLATION_ID}/access_tokens`,
     {
       method: "POST",
-      redirect: "error",
+      redirect: "manual",
       signal: AbortSignal.timeout(12000),
       headers: {
         Authorization: `Bearer ${jwt}`,

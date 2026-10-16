@@ -15,7 +15,7 @@ export class GitHub {
   constructor({
     owner,
     token,
-    fetcher = fetch,
+    fetcher = (input, init) => globalThis.fetch(input, init),
     now = () => new Date().toISOString(),
   }) {
     if (!/^[a-zA-Z0-9][a-zA-Z0-9-]{0,38}$/.test(owner))
@@ -42,7 +42,7 @@ export class GitHub {
     try {
       const r = await this.fetcher("https://api.github.com" + path, {
         method: "GET",
-        redirect: "error",
+        redirect: "manual",
         signal: AbortSignal.timeout(12000),
         headers: {
           Accept: "application/vnd.github+json",
