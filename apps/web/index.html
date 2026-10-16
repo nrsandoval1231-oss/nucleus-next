@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#f5f4ef" />
+    <title>Nucleus Next — Engineering portfolio</title>
+    <link rel="stylesheet" href="/style.css" />
+    <script type="module" src="/client.js"></script>
+  </head>
+  <body>
+    <aside class="sidebar">
+      <a class="brand" href="/" aria-label="Nucleus Next home"
+        ><span class="mark">n<span>°</span></span
+        ><span>nucleus<span class="next">NEXT</span></span></a
+      >
+      <div class="workspace-label">YOUR WORKSPACE</div>
+      <div class="owner">
+        <span class="avatar">NS</span
+        ><span>Nick Sandoval<small>Engineering portfolio</small></span>
+      </div>
+      <nav aria-label="Workspace">
+        <button class="nav-button active" data-view="all">
+          <span>◫</span> Portfolio
+          <span class="nav-count" id="nav-count">—</span></button
+        ><button class="nav-button" data-view="attention">
+          <span>◉</span> Attention
+          <span class="nav-count" id="attention-count">—</span></button
+        ><button class="nav-button" id="coverage-button">
+          <span>◎</span> Connection & coverage
+        </button>
+      </nav>
+      <div class="sidebar-note">
+        <span class="tiny-orbit"></span><strong>Evidence over activity.</strong>
+        <p>A merge is a fact.<br />Delivery needs its own proof.</p>
+        <span class="read-only">↗ READ-ONLY GITHUB</span>
+      </div>
+      <div class="sidebar-bottom">
+        <span class="status-dot"></span> Deterministic. No AI required.<small
+          >One portfolio. A clearer picture.</small
+        >
+      </div>
+    </aside>
+    <main>
+      <header class="topbar">
+        <span>WORKSPACE <span class="slash">/</span> PORTFOLIO</span
+        ><span class="top-label"
+          >Nucleus Next <span class="version">01</span></span
+        >
+      </header>
+      <div class="content">
+        <section class="intro">
+          <div>
+            <div class="eyebrow">
+              <span class="status-dot"></span> YOUR ENGINEERING OBSERVATORY
+            </div>
+            <h1>See where things stand.</h1>
+            <p>Actual work. Supporting evidence. A clear place to pick up.</p>
+          </div>
+          <button class="refresh" id="refresh">
+            <span id="refresh-icon">↻</span> Refresh portfolio
+          </button>
+        </section>
+        <div id="notice" class="notice" role="status" aria-live="polite">
+          Connecting to GitHub and discovering repository coverage…
+        </div>
+        <section class="metrics" aria-label="Portfolio summary">
+          <div>
+            <span class="metric-title">REPOSITORIES IN SCOPE</span
+            ><strong id="repo-count">—</strong
+            ><small id="repo-scope">Discovering authorized coverage</small>
+          </div>
+          <div>
+            <span class="metric-title">OPEN PULL REQUESTS</span
+            ><strong id="pull-count">—</strong
+            ><small id="pull-scope">Observed work, not delivery</small>
+          </div>
+          <div>
+            <span class="metric-title">HEADS INSPECTED</span
+            ><strong id="inspected-count">0</strong
+            ><small id="head-scope">Exact commit evidence loaded</small>
+          </div>
+          <div>
+            <span class="metric-title">OWNER ACCEPTANCE</span
+            ><strong class="word">Not recorded</strong
+            ><small>No completion inferred</small>
+          </div>
+        </section>
+        <section class="attention-strip" id="attention-strip">
+          <div class="strip-icon">◎</div>
+          <div>
+            <strong>A useful view starts with honest coverage.</strong>
+            <p>
+              Repository facts load first. Inspect a project for current
+              commits, checks, merges, and deployments.
+            </p>
+          </div>
+          <button id="strip-action">View coverage ↗</button>
+        </section>
+        <section class="portfolio">
+          <div class="section-head">
+            <div>
+              <h2 id="section-title">
+                Your projects <span id="visible-count"></span>
+              </h2>
+              <p id="section-caption">
+                GitHub observations, with the uncertainty kept visible.
+              </p>
+            </div>
+            <div class="controls">
+              <label class="search"
+                ><span>⌕</span
+                ><input
+                  id="search"
+                  type="search"
+                  placeholder="Find a repository…"
+                  aria-label="Find a repository" /></label
+              ><select id="sort" aria-label="Sort repositories">
+                <option value="activity">Recent activity</option>
+                <option value="name">Name A–Z</option>
+                <option value="attention">Open work first</option>
+              </select>
+            </div>
+          </div>
+          <div class="filters" role="group" aria-label="Filter projects">
+            <button class="filter active" data-filter="all">All projects</button
+            ><button class="filter" data-filter="attention">
+              Open work & attention</button
+            ><button class="filter" data-filter="inspected">Inspected</button
+            ><button class="filter" data-filter="archived">Archived</button>
+          </div>
+          <div id="projects" class="projects" aria-live="polite">
+            <div class="loading">Reading live repository metadata…</div>
+          </div>
+        </section>
+        <footer>
+          <span
+            ><span class="status-dot"></span> Evidence-linked, never completion
+            by assumption.</span
+          ><span id="observed">Awaiting first observation</span>
+        </footer>
+      </div>
+    </main>
+    <dialog id="details" aria-labelledby="detail-title">
+      <div id="detail-content"></div>
+    </dialog>
+    <dialog id="coverage" aria-labelledby="coverage-title">
+      <div class="dialog-header">
+        <div>
+          <div class="eyebrow">TRUST & SCOPE</div>
+          <h2 id="coverage-title">What Nucleus can see</h2>
+        </div>
+        <button class="close" data-close aria-label="Close coverage">×</button>
+      </div>
+      <div id="coverage-content"></div>
+    </dialog>
+  </body>
+</html>

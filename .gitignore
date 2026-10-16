@@ -21,6 +21,8 @@ coverage/
 .tmp/
 tmp/
 .cache/
+.sites-runtime/
+.sites-checkout/
 
 # Editor and OS
 .DS_Store
