@@ -120,7 +120,13 @@ export function createApplication({
       return json(await pending.get(id));
     } catch (e) {
       return json(
-        { error: e.code || "provider_error", retryAt: e.retryAt || null },
+        {
+          error: e.code || "provider_error",
+          retryAt: e.retryAt || null,
+          ...(!privateRuntime && e.code === "rate_limited"
+            ? { publicFallback: { owner } }
+            : {}),
+        },
         503,
       );
     }

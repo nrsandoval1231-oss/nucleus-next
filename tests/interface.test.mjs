@@ -2,14 +2,12 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { JSDOM } from "jsdom";
+import { browserCode } from "../scripts/browser-build.mjs";
 const html = await readFile(
   new URL("../apps/web/index.html", import.meta.url),
   "utf8",
 );
-const script = await readFile(
-  new URL("../apps/web/client.js", import.meta.url),
-  "utf8",
-);
+const script = await browserCode();
 const repos = [
   {
     id: "1",
@@ -78,12 +76,15 @@ const detail = {
   attention: [],
   scope: "Current head only",
 };
-async function page() {
+async function page({ fallback = false } = {}) {
   const dom = new JSDOM(html, {
       url: "http://localhost",
       runScripts: "outside-only",
     }),
     w = dom.window;
+  w.AbortSignal = AbortSignal;
+  w.TextEncoder = TextEncoder;
+  Object.defineProperty(w.crypto, "subtle", { value: crypto.subtle });
   w.HTMLDialogElement.prototype.showModal = function () {
     this.open = true;
   };
@@ -93,8 +94,42 @@ async function page() {
   let fail = false,
     currentDetail = structuredClone(detail);
   const calls = [];
-  w.fetch = async (url) => {
+  w.fetch = async (url, init) => {
     calls.push(url);
+    if (fallback && url === "/api/portfolio")
+      return {
+        ok: false,
+        json: async () => ({
+          error: "rate_limited",
+          publicFallback: { owner: "nick" },
+        }),
+      };
+    if (String(url).startsWith("https://api.github.com/")) {
+      assert.equal(init.method, "GET");
+      assert.equal(init.headers.Authorization, undefined);
+      const p = new URL(url).pathname;
+      return Response.json(
+        p.startsWith("/users/")
+          ? repos.map((r) => ({
+              ...r,
+              html_url: r.url,
+              owner: { login: "nick" },
+            }))
+          : p.startsWith("/search/")
+            ? { items: [], total_count: 0 }
+            : p.endsWith("/commits/main")
+              ? {
+                  sha: "abc",
+                  html_url: detail.head.url,
+                  commit: { message: "Actual commit" },
+                }
+              : p.endsWith("/check-runs")
+                ? { check_runs: [], total_count: 0 }
+                : p.endsWith("/status")
+                  ? { statuses: [], total_count: 0 }
+                  : [],
+      );
+    }
     if (fail)
       return { ok: false, json: async () => ({ error: "rate_limited" }) };
     return {
@@ -115,6 +150,34 @@ async function page() {
     setDetail: (value) => (currentDetail = value),
   };
 }
+test("rate-limited public demo uses credential-free direct reads and identifies temporary retention", async () => {
+  const { w, dom, calls } = await page({ fallback: true });
+  await new Promise((r) => setTimeout(r, 30));
+  assert.equal(w.document.querySelectorAll(".project").length, 2);
+  assert.match(w.document.querySelector("#notice").textContent, /directly/);
+  assert.match(
+    w.document.querySelector("#notice").textContent,
+    /browser session/,
+  );
+  w.document.querySelector('[data-inspect="1"]').click();
+  await new Promise((r) => setTimeout(r, 50));
+  assert.match(
+    w.document.querySelector("#details").textContent,
+    /Actual commit/,
+  );
+  assert.match(
+    w.document.querySelector("#details").textContent,
+    /browser session only/,
+  );
+  assert.ok(
+    calls.some((u) => u.startsWith("https://api.github.com/users/nick/repos")),
+  );
+  assert.equal(
+    calls.some((u) => u.startsWith("/api/repository")),
+    false,
+  );
+  dom.window.close();
+});
 test("attention headline clears after checks recover", async () => {
   const { w, dom, setDetail } = await page();
   setDetail({ ...detail, state: { ...detail.state, observed: "failure" } });

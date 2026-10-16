@@ -29,7 +29,7 @@ npm test
 npm run dev
 ```
 
-Open `http://localhost:4173`. Public discovery works without credentials. Use **Inspect project** to retrieve exact evidence; search, filters, sorting, connection coverage, and evidence links are interactive. Reads cache for five minutes, preserving acquisition timestamps. Public GitHub rate limits may make some reads unavailable; retry times are displayed where provided. Private installation scope is revalidated before every API read, even when detail evidence is cached.
+Open `http://localhost:4173`. Public discovery works without credentials. Use **Inspect project** to retrieve exact evidence; search, filters, sorting, connection coverage, and evidence links are interactive. Reads cache for five minutes, preserving acquisition timestamps. Public GitHub rate limits may make some reads unavailable; retry times are displayed where provided. When public discovery is rate-limited at the server, a credential-free browser transport reads the same public API through shared ingestion code. That fallback retains evidence only for the browser session and is explicitly labeled; it is never offered for a private runtime. Durable memory still belongs in the central PostgreSQL adapter. Private installation scope is revalidated before every API read, even when detail evidence is cached.
 
 ### Private repositories and central retention
 

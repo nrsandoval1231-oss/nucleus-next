@@ -1,4 +1,6 @@
+import { publicPortfolio, publicRepository } from "./public.mjs";
 const $ = (s) => document.querySelector(s);
+let publicOwner = null;
 const escape = (s) =>
   String(s ?? "").replace(
     /[&<>"']/g,
@@ -63,10 +65,20 @@ async function api(path) {
     cache: "no-store",
   });
   const x = await r.json();
+  if (
+    !r.ok &&
+    path === "/api/portfolio" &&
+    x.error === "rate_limited" &&
+    x.publicFallback?.owner
+  ) {
+    publicOwner = x.publicFallback.owner;
+    return publicPortfolio(publicOwner);
+  }
   if (!r.ok)
     throw Object.assign(new Error(x.error || "provider_error"), {
       retryAt: x.retryAt,
     });
+  if (path === "/api/portfolio") publicOwner = null;
   return x;
 }
 function notice(text, error = false) {
@@ -173,7 +185,12 @@ function card(r) {
 }
 async function loadRepository(id) {
   if (inflight.has(id)) return inflight.get(id);
-  const p = api(`/api/repository?id=${encodeURIComponent(id)}`)
+  const meta = inventory.repositories.find((r) => r.id === id);
+  const p = (
+    publicOwner
+      ? publicRepository(publicOwner, meta)
+      : api(`/api/repository?id=${encodeURIComponent(id)}`)
+  )
     .then((d) => {
       details.set(id, d);
       errors.delete(id);
@@ -343,7 +360,7 @@ function bindClose() {
 function showCoverage() {
   const d = inventory;
   $("#coverage-content").innerHTML =
-    `<div class="coverage-grid"><div>Connection<small>${d?.mode === "github_app" ? "Dedicated GitHub App · installation scope" : "Live GitHub public API · private repositories unavailable"}</small></div><div>Retention<small>${d?.durability === "postgresql" ? "Central PostgreSQL evidence store" : "Temporary server session. May reset at any time; no durable memory claim."}</small></div></div><div class="coverage-list"><div><strong>Discovered repositories: ${d?.repositories.length ?? "unavailable"}</strong><p>${d?.complete ? "All pages in the declared discovery scope were retrieved." : "Inventory is unavailable or partial."} ${d?.mode === "public" ? "Public discovery does not establish coverage of your private portfolio." : ""}</p></div><div><strong>Current evidence, fetched when you inspect</strong><p>Default head, its checks and commit statuses, all open pull requests up to 1,000, the 10 most recently updated closed PRs, and 5 recent releases and deployments. Each read has its own timestamp and error state.</p></div><div><strong>Open-work overview</strong><p>${escape(d?.openWork?.scope || "Search-index overview unavailable.")} · ${escape(label(d?.openWork?.state))}</p></div><div><strong>Explicitly outside this first slice</strong><p>Approved verification profiles, PR-head checks, review requirements, historical backfill, webhooks, owner vision approval, and acceptance workflows. No overall completion, project regime, or live agent status is inferred.</p></div><div><strong>Read-only integration</strong><p>No repository-write route exists. Runtime App authentication requests read-only grants. Repository descriptions remain source descriptions, never owner-approved vision.</p></div><div><strong>Refresh behavior</strong><p>Reads are coalesced and cached for five minutes to protect GitHub limits. Refresh re-reads discovery and the projects you have inspected; retained observations preserve their original times. A failed source remains unavailable or stale.</p></div><div><strong>Complete private coverage requires runtime configuration</strong><p>A dedicated read-only GitHub App must be installed on selected repositories and its server credentials configured, along with the owner identity. PostgreSQL must be configured for durable central evidence. Neither is claimed active in the public demonstration.</p></div></div>${link("https://github.com/nrsandoval1231-oss/nucleus-next/blob/main/docs/PRD.md", "Canonical product requirements")}`;
+    `<div class="coverage-grid"><div>Connection<small>${d?.mode === "github_app" ? "Dedicated GitHub App · installation scope" : "Live GitHub public API · private repositories unavailable"}</small></div><div>Retention<small>${d?.durability === "postgresql" ? "Central PostgreSQL evidence store" : "Temporary session evidence. Browser fallback lasts only until this page closes; server memory may reset at any time. No durable memory claim."}</small></div></div><div class="coverage-list"><div><strong>Discovered repositories: ${d?.repositories.length ?? "unavailable"}</strong><p>${d?.complete ? "All pages in the declared discovery scope were retrieved." : "Inventory is unavailable or partial."} ${d?.mode === "public" ? "Public discovery does not establish coverage of your private portfolio." : ""}</p></div><div><strong>Current evidence, fetched when you inspect</strong><p>Default head, its checks and commit statuses, all open pull requests up to 1,000, the 10 most recently updated closed PRs, and 5 recent releases and deployments. Each read has its own timestamp and error state.</p></div><div><strong>Open-work overview</strong><p>${escape(d?.openWork?.scope || "Search-index overview unavailable.")} · ${escape(label(d?.openWork?.state))}</p></div><div><strong>Explicitly outside this first slice</strong><p>Approved verification profiles, PR-head checks, review requirements, historical backfill, webhooks, owner vision approval, and acceptance workflows. No overall completion, project regime, or live agent status is inferred.</p></div><div><strong>Read-only integration</strong><p>No repository-write route exists. Runtime App authentication requests read-only grants. Repository descriptions remain source descriptions, never owner-approved vision.</p></div><div><strong>Refresh behavior</strong><p>Reads are coalesced and cached for five minutes to protect GitHub limits. Refresh re-reads discovery and the projects you have inspected; retained observations preserve their original times. A failed source remains unavailable or stale.</p></div><div><strong>Complete private coverage requires runtime configuration</strong><p>A dedicated read-only GitHub App must be installed on selected repositories and its server credentials configured, along with the owner identity. PostgreSQL must be configured for durable central evidence. Neither is claimed active in the public demonstration.</p></div></div>${link("https://github.com/nrsandoval1231-oss/nucleus-next/blob/main/docs/PRD.md", "Canonical product requirements")}`;
   $("#coverage").showModal();
   bindClose();
 }
@@ -360,7 +377,7 @@ async function refresh() {
     for (const id of details.keys()) if (!allowed.has(id)) details.delete(id);
     render();
     notice(
-      `${d.mode === "public" ? "Live public coverage. Private repositories are unavailable until the runtime GitHub App is connected." : "Live installation coverage for selected repositories."} ${d.complete ? "" : "Repository inventory is partial. "}${d.durability === "postgresql" ? "Central PostgreSQL retention active." : "Demo evidence is temporary; durable memory is not configured."}`,
+      `${d.transport === "direct_public_browser" ? "Server quota exhausted. Reading public GitHub directly; evidence lasts only in this browser session. " : ""}${d.mode === "public" ? "Live public coverage. Private repositories are unavailable until the runtime GitHub App is connected." : "Live installation coverage for selected repositories."} ${d.complete ? "" : "Repository inventory is partial. "}${d.durability === "postgresql" ? "Central PostgreSQL retention active." : "Demo evidence is temporary; durable memory is not configured."}`,
     );
     // Overview is cheap. Detailed endpoint reads are explicit, avoiding a wasteful full-portfolio scan.
     for (const id of [...details.keys()]) {

@@ -2,6 +2,25 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { createApplication } from "../apps/web/api.mjs";
 import { MemoryStore } from "../packages/db/store.mjs";
+test("public browser fallback is never offered by the private runtime", async () => {
+  const fail = async () => {
+    throw Object.assign(new Error("quota"), { code: "rate_limited" });
+  };
+  const pub = await app({ discoverFn: fail })(
+    new Request("http://localhost/api/portfolio"),
+  );
+  assert.equal((await pub.json()).publicFallback.owner, "nick");
+  const priv = await app({
+    privateRuntime: true,
+    ownerId: "owner",
+    discoverFn: fail,
+  })(
+    new Request("http://localhost/api/portfolio", {
+      headers: { "oai-authenticated-user-id": "owner" },
+    }),
+  );
+  assert.equal((await priv.json()).publicFallback, undefined);
+});
 test("private cached evidence revalidates installation scope before every read", async () => {
   let revoked = false;
   const a = app({

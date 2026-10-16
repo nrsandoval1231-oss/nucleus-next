@@ -1,6 +1,8 @@
 import { createServer } from "node:http";
 import { readFile } from "node:fs/promises";
 import { runtime, securityHeaders } from "./runtime.mjs";
+import { browserCode } from "../../scripts/browser-build.mjs";
+const clientCode = await browserCode();
 let store;
 if (process.env.DATABASE_URL) {
   const { PostgresStore } = await import("../../packages/db/postgres.mjs");
@@ -37,7 +39,9 @@ const server = createServer(async (req, res) => {
       response = new Response("Read only", { status: 405 });
     else if (assets[path])
       response = new Response(
-        await readFile(new URL(assets[path][0], import.meta.url)),
+        path === "/client.js"
+          ? clientCode
+          : await readFile(new URL(assets[path][0], import.meta.url)),
         {
           headers: {
             "content-type": assets[path][1] + "; charset=utf-8",
