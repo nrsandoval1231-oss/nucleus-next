@@ -362,6 +362,27 @@ Display empty, indexing, partial, disconnected, stale, permission-denied and opt
 
 All functionality MUST be keyboard accessible, have visible focus, readable labels, sufficient contrast and reduced-motion support. Color is never the sole signal. Cite evidence in a consistent expandable detail panel showing source, SHA, event/observation time, authority and uncertainty. Dates display in the owner's timezone with UTC available. Destructive Nucleus data actions and owner approvals show their exact effect; ordinary evidence navigation needs no confirmation.
 
+### 11.1 Time Architect / Living Present — approved exploratory UI direction
+
+The owner selected **Time Architect**, with **The Living Present** as its default entry experience, for further UI development. This is a presentation and interaction direction **within** Nucleus Next, not a new product definition, additional mandatory capability, or amendment to the trust, authority, scope, deployment, and release gates in this PRD. The independent Living Material and Infinite Atelier concepts remain separate explorations and are not merged into this direction.
+
+The Living Present SHOULD offer a calm, focused current-state entry point that retains immediate access to the PRD-required portfolio, repository coverage, evidence freshness, verification dimensions, approved intent, attention and next actions. Progressive disclosure and an optional spatial/crystalline representation MUST NOT hide repository coverage, missing/unknown evidence, or the Portfolio → Project → relevant view navigation. The owner MUST be able to reach the governing state and its evidence without navigating a 3D scene.
+
+The proposed interaction vocabulary is:
+- **Present:** current evidence-backed portfolio/project state and priority, never inferred completion from activity.
+- **X-Ray:** Project DNA and dependencies grounded in typed source-backed relationships; separate declared, observed and inferred architecture.
+- **Time Echo:** Time Machine with explicitly selectable **As known then** and **Reconstructed now** semantics, evidence timestamps and coverage limitations as defined in §6.3.
+- **Possibility Chamber:** optional, clearly hypothetical decision comparisons that disclose assumptions and uncertainty; scenarios are proposals, not predictions, verified outcomes, approved vision changes, or authority to execute.
+- **Return to Present:** return to current observed state; a proposed or approved Nucleus decision MUST NOT visually become completed engineering work without independent applicable evidence.
+
+The visual structure MUST map to real, identifiable repository/project objects or explicitly labeled conceptual groupings. Any visual encoding of progress, dependencies, risk or state must be deterministic, explainable, accessible in text and consistent with the completion vector in §7.2. Avoid arbitrary health scores, invented durations/confidence probabilities, decorative motion presented as activity, and unsupported dependency propagation. Use consistent evidence detail exposing source, exact SHA/ref where applicable, observed/event time, authority, freshness, and uncertainty.
+
+The same reading, investigation, historical comparison, and owner-approval flows MUST work on desktop and mobile. Spatial effects and 3D are optional progressive enhancements, not required for task completion. Keyboard operation, visible focus, readable labels, contrast, reduced motion, touch targets and a non-3D equivalent remain mandatory under §11 and acceptance scenario A32. Prefer mobile interaction clarity over desktop spectacle; never block the core product on a graphics engine.
+
+**Implementation and hosting boundary:** Experimental Time Architect prototypes may use static sample data and isolated preview hosting, including Vercel, provided they are prominently labeled non-authoritative and contain no production secrets or private repository data. Such previews are not the canonical application, do not establish release acceptance, and do not supersede §12's Cloudflare Pages + DigitalOcean + PostgreSQL production topology. The current exploratory implementation is isolated in `experiments/time-architect/` on draft PR #4; it has no live GitHub evidence pipeline and must not be represented as fulfilling F01–F12.
+
+**Dependency order:** Follow §17: trust/persistence and live evidence vertical path before connecting Time Architect to authoritative state; protected intent, deterministic intelligence and temporal reconstruction before claiming full X-Ray/Time Echo behavior; cinematic 3D and advanced scenario exploration only after the underlying evidence-backed interactions meet applicable gates. Any proposed change to these protected requirements needs explicit owner review and a versioned PRD revision.
+
 ## 12. System architecture and component boundaries
 
 ### 12.1 Chosen deployment topology

@@ -9,6 +9,14 @@ Build Nucleus Next as a focused GitHub portfolio intelligence and persistent pro
 - Owner-approved vision and decisions cannot be silently overwritten by inferred information.
 - `README.md` provides orientation only.
 
+## Time Architect guardrails
+
+- Follow PRD §11.1 for the approved **exploratory** Living Present UI direction. Do not treat mockups or the prototype as evidence-backed product functionality.
+- Preserve required Portfolio → Project → relevant view navigation, source coverage, exact-SHA verification, evidence detail, owner authority and accessible non-3D workflows.
+- Time Echo must distinguish As known then from Reconstructed now. Future scenarios must remain hypothetical, and a proposed action is not an executed or verified result.
+- Keep `experiments/time-architect/` isolated until a PRD-traceable implementation and acceptance review. Vercel is preview-only; production topology remains PRD §12.
+- Prioritize §17 trust/persistence and live evidence before cinematic 3D. Cite affected F-requirements and A-acceptance scenarios in implementation PR descriptions.
+
 ## Engineering constraints
 - Use deterministic code for ingestion, state, and rules; Jev and generative models are optional.
 - Keep GitHub access read-only until explicit product authorization changes that boundary.

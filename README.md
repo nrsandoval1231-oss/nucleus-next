@@ -17,6 +17,12 @@ Nucleus Next is a GitHub portfolio intelligence and persistent engineering memor
 
 The implementation-ready product specification will live at [`docs/PRD.md`](docs/PRD.md) once authored and reviewed. This README is an orientation, not a competing specification.
 
+## Time Architect UI exploration
+
+**Time Architect / The Living Present** is the owner-selected exploratory interaction direction, governed by [§11.1 of the canonical PRD](docs/PRD.md). It is not a replacement for the required portfolio, evidence, vision, memory, and verification capabilities.
+
+An isolated mobile-first concept lives on [draft PR #4](https://github.com/nrsandoval1231-oss/nucleus-next/pull/4) under `experiments/time-architect/`. It uses illustrative data, not live GitHub state, and its Vercel preview is not the production deployment. The core implementation must follow the PRD's dependency order and hosting architecture. Do not merge the concept as a production feature or claim release readiness based on the prototype.
+
 ## Planned lean monorepo
 
 ```text
