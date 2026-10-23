@@ -1,0 +1,17 @@
+:root {
+  --obelisk-obsidian: #0A0D14;
+  --obelisk-midnight: #111B26;
+  --obelisk-slate: #1C2A3A;
+  --obelisk-steel: #32465B;
+  --obelisk-champagne: #E8C79A;
+  --obelisk-gold: #D4A657;
+  --obelisk-warm-ivory: #F6EED9;
+  --obelisk-mist: #A7B3C6;
+  --obelisk-danger: #E57878;
+  --obelisk-success: #73C7A3;
+  --obelisk-information: #80B7E7;
+  --obelisk-font-display: "Cormorant Garamond", Georgia, serif;
+  --obelisk-font-ui: Sora, sans-serif;
+  --obelisk-font-body: Inter, sans-serif;
+  --obelisk-font-data: "IBM Plex Mono", monospace;
+}
