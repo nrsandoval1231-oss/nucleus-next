@@ -1,0 +1,28 @@
+{
+  "name": "Obelisk",
+  "version": "1.0",
+  "colors": {
+    "obsidian": "#0A0D14",
+    "midnight": "#111B26",
+    "slate": "#1C2A3A",
+    "steel": "#32465B",
+    "champagne": "#E8C79A",
+    "gold": "#D4A657",
+    "warmIvory": "#F6EED9",
+    "mist": "#A7B3C6",
+    "danger": "#E57878",
+    "success": "#73C7A3",
+    "information": "#80B7E7"
+  },
+  "typography": {
+    "display": "Cormorant Garamond",
+    "interface": "Sora",
+    "body": "Inter",
+    "data": "IBM Plex Mono"
+  },
+  "radii": {
+    "sm": 6,
+    "md": 12,
+    "lg": 20
+  }
+}
